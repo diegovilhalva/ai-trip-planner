@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { SignInButton } from "@clerk/nextjs"
 import { Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -30,7 +31,9 @@ const Header = () => {
 
       {/* Botão Desktop */}
       <div className="hidden md:block">
-        <Button>Get Started</Button>
+        <SignInButton mode="modal">
+          <Button>Get Started</Button>
+        </SignInButton>
       </div>
 
       {/* Mobile Menu */}
@@ -48,7 +51,9 @@ const Header = () => {
                   {menu.name}
                 </Link>
               ))}
-              <Button className="mt-4">Get Started</Button>
+              <SignInButton mode="modal">
+                <Button className="mt-4">Get Started</Button>
+              </SignInButton>
             </div>
           </SheetContent>
         </Sheet>

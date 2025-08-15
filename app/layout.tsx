@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google"
 import "./globals.css";
 import Provider from "./provider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 
 
@@ -18,14 +19,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={outfit.className}
+    <ClerkProvider 
+     appearance={{
+        variables: {
+          colorPrimary: "#FF4404", // sua cor primária
+          colorTextOnPrimaryBackground: "#ffffff", // texto no botão
+        },
+        elements: {
+          buttonPrimary: "bg-[#E02020] hover:bg-[#c91c1c] text-white",
+        },
+      }} 
       >
-        <Provider>
-          {children}
-        </Provider>
-      </body>
-    </html>
+      <html lang="en">
+        <body
+          className={outfit.className}
+        >
+          <Provider>
+            {children}
+          </Provider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
