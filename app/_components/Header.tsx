@@ -36,7 +36,7 @@ const Header = () => {
         {!user ? (<SignInButton mode="modal">
           <Button>Get Started</Button>
         </SignInButton>) : (
-          <Link href={'/create-trip'}>
+          <Link href={'/create-new-trip'}>
             <Button>Create New Trip</Button>
           </Link>
         )}
@@ -62,7 +62,7 @@ const Header = () => {
                 <SignInButton mode="modal">
                   <Button className="mt-4">Get Started</Button>
                 </SignInButton>) : (
-                <Link href={'/create-trip'}>
+                <Link href={'/create-new-trip'}>
                   <Button>Create New Trip</Button>
                 </Link>
               )}
