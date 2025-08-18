@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { SignInButton } from "@clerk/nextjs"
+import { SignInButton, useUser } from "@clerk/nextjs"
 import { Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
 const Header = () => {
+
+  const { user } = useUser()
   const menuOptions = [
     { name: "Home", path: "/" },
     { name: "Pricing", path: "/pricing" },
@@ -31,9 +33,14 @@ const Header = () => {
 
       {/* Botão Desktop */}
       <div className="hidden md:block">
-        <SignInButton mode="modal">
+        {!user ? (<SignInButton mode="modal">
           <Button>Get Started</Button>
-        </SignInButton>
+        </SignInButton>) : (
+          <Link href={'/create-trip'}>
+            <Button>Create New Trip</Button>
+          </Link>
+        )}
+
       </div>
 
       {/* Mobile Menu */}
@@ -51,9 +58,14 @@ const Header = () => {
                   {menu.name}
                 </Link>
               ))}
-              <SignInButton mode="modal">
-                <Button className="mt-4">Get Started</Button>
-              </SignInButton>
+              {!user ? (
+                <SignInButton mode="modal">
+                  <Button className="mt-4">Get Started</Button>
+                </SignInButton>) : (
+                <Link href={'/create-trip'}>
+                  <Button>Create New Trip</Button>
+                </Link>
+              )}
             </div>
           </SheetContent>
         </Sheet>
