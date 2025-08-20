@@ -5,9 +5,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useUser } from '@clerk/nextjs'
 import { ArrowDown, Car, Globe2, Landmark, Send } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-
-const Hero = () => {
-  const suggestions = [
+export const suggestions = [
     {
       title: "Plan a 5-day trip to Japan in April",
       icon: <Globe2 className="text-blue-400 h-5 w-5" />
@@ -21,6 +19,9 @@ const Hero = () => {
       icon: <Car className="text-green-500 w-5 h-5" />
     }
   ]
+
+const Hero = () => {
+
 
   const router = useRouter()
   const {user} = useUser()
