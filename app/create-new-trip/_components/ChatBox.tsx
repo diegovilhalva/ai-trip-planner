@@ -16,11 +16,25 @@ type Message = {
     ui?: string
 }
 
+
+export type TripInfo = {
+    budget: string,
+    destination: string,
+    duration: string,
+    group_size: string,
+    origin: string,
+    hotels: any,
+    itinerary: any
+}
+
+
 const ChatBox = () => {
     const [messages, setMessages] = useState<Message[]>([])
     const [userInput, setUserInput] = useState<string>("")
     const bottomRef = useRef<HTMLDivElement>(null)
     const [loading, setLoading] = useState<boolean>(false)
+    const [isFinal, setIsFinal] = useState<boolean>(false)
+    const [tripDetail,setTripDetail] = useState<TripInfo>()
     const onSend = async () => {
         if (!userInput.trim()) return
 
@@ -37,19 +51,23 @@ const ChatBox = () => {
             setLoading(true)
             const res = await axios.post("/api/aimodel", {
                 messages: [...messages, newMsg],
+                isFinal: isFinal
             })
 
 
             const data = res.data
             console.log("Resposta do backend:", data)
 
-            setMessages((prev: Message[]) => [
+            !isFinal && setMessages((prev: Message[]) => [
                 ...prev,
                 { role: "assistant", content: data?.resp ?? "Error: invalid response", ui: data.ui },
             ])
             setLoading(false)
 
 
+            if (isFinal) {
+                setTripDetail(data?.trip_plan)
+            }
         } catch (err) {
             console.error("Erro na requisição:", err)
             setMessages((prev: Message[]) => [
@@ -60,25 +78,35 @@ const ChatBox = () => {
     }
 
     const RenderGenerativeUI = (ui: string) => {
-       switch (ui) {
-        case  "budget":
-            return <Budget onSelectOption={(v: string) => { setUserInput(v); onSend() }}/>
-        case "groupSize":
-            return <GroupSize onSelectOption={(v: string) => { setUserInput(v); onSend() }} />
-        case "tripDuration":
-            return <SelectDays onSelectOption={(v: string) => { setUserInput(v); onSend() }} />
-        case "final":
-            return <Final />
-
-        default:
-            break;
-       }
+        switch (ui) {
+            case "budget":
+                return <Budget onSelectOption={(v: string) => { setUserInput(v); onSend() }} />
+            case "groupSize":
+                return <GroupSize onSelectOption={(v: string) => { setUserInput(v); onSend() }} />
+            case "tripDuration":
+                return <SelectDays onSelectOption={(v: string) => { setUserInput(v); onSend() }} />
+            case "final":
+                return <Final onSelectOption={() =>{}} disable={!tripDetail} />
+            default:
+                break;
+        }
     }
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+        const lastMsg = messages[messages.length - 1];
+        if (lastMsg?.ui == 'final') {
+            setIsFinal(true);
+            setUserInput('Ok,Great!')
+            
+        }
     }, [messages])
 
+    useEffect(() => {
+        if (isFinal && userInput) {
+            onSend();
+        }
+    }, [isFinal]);
     return (
         <div className="h-[85vh] flex flex-col">
             {messages?.length === 0 && (
@@ -97,7 +125,7 @@ const ChatBox = () => {
                         <div className="flex justify-start mt-2" key={idx}>
                             <div className="max-w-xs sm:max-w-md md:max-w-lg bg-gray-100 text-black px-4 py-2 rounded-2xl whitespace-pre-wrap">
                                 {msg.content}
-                                {RenderGenerativeUI(msg.ui??'')}
+                                {RenderGenerativeUI(msg.ui ?? '')}
                             </div>
                         </div>
                     )

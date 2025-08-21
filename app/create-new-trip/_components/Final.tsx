@@ -13,7 +13,7 @@ const Final = ({ viewTrip, disable }: any) => {
             <p className="text-gray-500 text-sm text-center mt-1">
                 Gathering best destinations, activities, and travel details for you.
             </p>
-            <Button disabled onClick={viewTrip} className="mt-2 w-full">View Trip</Button>
+            <Button disabled={disable} onClick={viewTrip} className="mt-2 w-full">View Trip</Button>
         </div>
     )
 }
