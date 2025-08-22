@@ -154,7 +154,7 @@ const ChatBox = () => {
         }
     }, [isFinal]);
     return (
-        <div className="h-[85vh] flex flex-col">
+        <div className="h-[70vh] md:h-[80vh] flex flex-col">
             {messages?.length === 0 && (
                 <EmptyState onSelectedOption={(value: string) => { setUserInput(value); onSend() }} />
             )}
@@ -190,7 +190,7 @@ const ChatBox = () => {
                 <div className="border rounded-2xl p-4 relative shadow-sm bg-white/80 backdrop-blur-sm">
                     <Textarea
                         placeholder="Start typing here"
-                        className="w-full h-28 bg-transparent border-none focus-visible:ring-0 shadow-none resize-none"
+                       className="w-full h-24 md:h-28 bg-transparent border-none focus-visible:ring-0 shadow-none resize-none"
                         onChange={(e) => setUserInput(e.target.value)}
                         value={userInput}
                         onKeyDown={(e) => {
