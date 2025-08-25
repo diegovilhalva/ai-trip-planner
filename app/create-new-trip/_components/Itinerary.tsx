@@ -1,10 +1,8 @@
 import { Timeline } from '@/components/ui/timeline';
 import React from 'react'
 import { Hotel } from './ChatBox';
-import Image from 'next/image';
-import { Clock, ExternalLink, Star, Ticket, Wallet } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import HotelCardItem from './HotelCardItem';
+import PlaceCardItem from './PlaceCardItem';
 
 const TRIP_DATA = {
     "destination": "Istanbul, Turkey",
@@ -449,20 +447,7 @@ const Itinerary = () => {
             content: (
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4' >
                     {TRIP_DATA.hotels.map((hotel: Hotel, idx) => (
-                        <div className='flex flex-col gap-1' key={idx}>
-                            <Image src={"/placeholder.jpg"} width={400} height={200} alt='placeholder' className='rounded-xl shadow object-cover mb-2' />
-                            <h3 className='font-semibold'>{hotel.hotel_name}</h3>
-                            <h4 className='text-gray-500'>{hotel.hotel_address}</h4>
-                            <div className="flex justify-between items-center">
-                                <p className='flex gap-2 text-green-600'> <Wallet />{hotel.price_per_night}</p>
-                                <p className='text-yellow-500 flex gap-2'><Star />{hotel.rating}</p>
-                            </div>
-
-                            {/*<p className="line-clamp-2 text-gray-500">{hotel.description}</p>*/}
-                            <Link href={'https://www.google.com/maps/search/?api=1&query=' + hotel?.hotel_name} target="_blank">
-                                <Button variant={'outline'} className="mt-1 w-full">View</Button>
-                            </Link>
-                        </div>
+                       <HotelCardItem  hotel={hotel} key={idx}/>
                     ))}
                 </div>
             ),
@@ -475,17 +460,7 @@ const Itinerary = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                         {dayData.activities.map((activity, idx) => (
-                            <div key={idx}>
-                                <Image src={'/placeholder.jpg'} width={400} height={200} alt={activity.place_name} className='object-cover rounded-xl' />
-                                <h2 className='font-semibold text-lg'>{activity.place_name}</h2>
-                                <p className='text-gray-500 line-clamp-2'>{activity.place_details}</p>
-                                <h3 className='flex gap-2 text-blue-500 line-clamp-1'>
-                                    <Ticket /> {activity.ticket_price}</h3>
-                                <p className="flex text-orange-400 gap-2"><Clock /> {activity.best_time_to_visit}</p>
-                                <Link href={'https://www.google.com/maps/search/?api=1&query=' + activity?.place_name} target="_blank">
-                                    <Button size={'sm'} variant={'outline'} className="w-full mt-2">View <ExternalLink /></Button>
-                                </Link>
-                            </div>
+                          <PlaceCardItem activity={activity} key={idx} />
                         ))}
                     </div>
                 </div>
