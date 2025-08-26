@@ -11,7 +11,7 @@ import SelectDays from "./SelectDays"
 import Final from "./Final"
 import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { useUserDetail } from "@/app/provider"
+import { useTripDetail, useUserDetail } from "@/app/provider"
 import { v4 as uuidv4 } from "uuid"
 
 type Message = {
@@ -75,6 +75,8 @@ const ChatBox = () => {
     const [tripDetail, setTripDetail] = useState<TripInfo>()
     const SaveTripDetail = useMutation(api.tripDetail.CreateTripDetail)
     const { userDetail, setUserDetail } = useUserDetail()
+    // @ts-ignore
+    const { tripDetailInfo, setTripDetailInfo } = useTripDetail()
     const onSend = async () => {
         if (!userInput.trim()) return
 
@@ -107,6 +109,7 @@ const ChatBox = () => {
 
             if (isFinal) {
                 setTripDetail(data?.trip_plan)
+                setTripDetailInfo(data?.trip_plan)
                 const id = uuidv4()
                 const result = await SaveTripDetail({
                     tripDetail: data?.trip_plan,
@@ -190,7 +193,7 @@ const ChatBox = () => {
                 <div className="border rounded-2xl p-4 relative shadow-sm bg-white/80 backdrop-blur-sm">
                     <Textarea
                         placeholder="Start typing here"
-                       className="w-full h-24 md:h-28 bg-transparent border-none focus-visible:ring-0 shadow-none resize-none"
+                        className="w-full h-24 md:h-28 bg-transparent border-none focus-visible:ring-0 shadow-none resize-none"
                         onChange={(e) => setUserInput(e.target.value)}
                         value={userInput}
                         onKeyDown={(e) => {
