@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { aj } from "../arcjet/route";
+
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { aj } from "@/lib/arcjet";
 
 const PROMPT = `
 You are an AI Trip Planner Agent.
