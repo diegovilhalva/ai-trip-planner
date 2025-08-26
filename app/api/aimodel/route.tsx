@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { aj } from "../arcjet/route";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 const PROMPT = `
 You are an AI Trip Planner Agent.
@@ -78,17 +78,18 @@ Output Schema:
 
 export async function POST(req: NextRequest) {
   const { messages, isFinal } = await req.json();
-  const  user  = await currentUser()
+  const user = await currentUser()
+  const { has } = await auth()
+  const hasPremiumAccess = has({ plan: 'monthly' })
+  const decision = await aj.protect(req, { userId: user?.primaryEmailAddress?.emailAddress ?? '', requested: isFinal ? 5 : 0 });
 
-  const decision = await aj.protect(req, { userId: user?.primaryEmailAddress?.emailAddress ?? '', requested:  isFinal ? 5 : 0 });
-
-  if (decision.reason.isRateLimit()) {
-     return NextResponse.json({
-        resp:'No free credit Remaining',
-        ui:'limit'
-      })
+  if (decision.isDenied() && decision.reason.isRateLimit() && !hasPremiumAccess) {
+    return NextResponse.json({
+      resp: 'No free credit Remaining',
+      ui: 'limit'
+    })
   }
-  
+
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
